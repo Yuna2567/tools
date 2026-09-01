@@ -275,15 +275,15 @@ export default function PomodoroPage() {
 
       <div className="tb-card flex flex-col items-center gap-8 p-8">
         {/* 模式切換 */}
-        <div className="flex gap-1 rounded-full bg-tb-bg p-1">
+        <div className="flex gap-1 rounded-sm border border-tb-line bg-tb-bg p-1">
           {(Object.keys(MODES) as Mode[]).map((m) => (
             <button
               key={m}
               onClick={() => switchMode(m, false)}
-              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+              className={`rounded-[2px] px-4 py-1.5 text-sm font-semibold transition-colors ${
                 mode === m
-                  ? "bg-white text-tb-rose-deep shadow-sm"
-                  : "text-tb-ink/50 hover:text-tb-rose-deep"
+                  ? "bg-tb-ink text-tb-bg"
+                  : "text-tb-ink-soft hover:text-tb-ink"
               }`}
             >
               {MODES[m].label}

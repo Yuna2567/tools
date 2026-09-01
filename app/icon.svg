@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
-  <rect width="40" height="40" rx="9" fill="#dfa22a"/>
+  <rect width="40" height="40" fill="#fbfbf9"/>
   <path d="M11.5 13.5 C11.5 9.3 14.5 6.8 18.2 6.8 C21.9 6.8 24.9 9.3 24.9 13.5"
-        transform="translate(1.8 3)" stroke="#23201a" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+        transform="translate(1.8 2.4)" stroke="#14130f" stroke-width="3" stroke-linecap="round" fill="none"/>
   <path fill-rule="evenodd" clip-rule="evenodd"
-        d="M6.5 15 H14.2 A6.2 6.2 0 0 0 25.8 15 H33.5 A2.3 2.3 0 0 1 35.8 17.3 V30.5 A2.3 2.3 0 0 1 33.5 32.8 H6.5 A2.3 2.3 0 0 1 4.2 30.5 V17.3 A2.3 2.3 0 0 1 6.5 15 Z M17.4 21.4 h5.2 v5.2 h-5.2 Z"
-        fill="#23201a"/>
+        d="M6 14 H14 A6 6 0 0 0 26 14 H34 A2.2 2.2 0 0 1 36.2 16.2 V31 A2.2 2.2 0 0 1 34 33.2 H6 A2.2 2.2 0 0 1 3.8 31 V16.2 A2.2 2.2 0 0 1 6 14 Z M17.6 21 h4.8 v4.8 h-4.8 Z"
+        fill="#14130f"/>
 </svg>

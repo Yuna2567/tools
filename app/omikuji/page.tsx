@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import PageHeader from "@/components/PageHeader";
+import { CircleArrow } from "@/components/ui";
 
 type Tone = "super" | "great" | "good" | "mid" | "bad" | "worst";
 
@@ -226,118 +227,111 @@ export default function OmikujiPage() {
         誠心默念想問的事，搖動籤筒抽出今日運勢（超大吉～大凶）。每天一支，隔日可再抽。
       </PageHeader>
 
-      {/* 籤筒 */}
-      <button
-        onClick={draw}
-        disabled={drawing}
-        className="omikuji-tube"
-        style={drawing ? { animation: "omikuji-shake 0.3s ease-in-out infinite" } : undefined}
-        aria-label="抽籤"
-      >
-        <span className="tube-sticks">
-          <span className="tube-stick" data-a="-25" style={{ left: "-32px", height: "148px" }} />
-          <span className="tube-stick" data-a="-9" style={{ left: "-12px", height: "126px" }} />
-          <span className="tube-stick" data-a="8" style={{ left: "6px", height: "140px" }}>
-            <span className="tube-knot" />
-          </span>
-          <span className="tube-stick" data-a="23" style={{ left: "22px", height: "112px" }} />
-        </span>
+      {/* 籤筒（單線繪製）*/}
+      <div className="flex flex-col items-center gap-4">
+        <button
+          onClick={draw}
+          disabled={drawing}
+          aria-label="抽籤"
+          className="omikuji-shaker"
+        >
+          <svg viewBox="0 0 170 250" className="block h-60 w-auto">
+            {/* 竹籤 */}
+            {[
+              { deg: -23, len: 116, dot: false },
+              { deg: -6, len: 132, dot: false },
+              { deg: 15, len: 104, dot: true },
+            ].map((s, i) => {
+              const top = 82 - s.len;
+              return (
+                <g key={i} transform={`rotate(${s.deg} 85 82)`}>
+                  <rect
+                    x={79}
+                    y={top}
+                    width={12}
+                    height={s.len}
+                    rx={2}
+                    fill="#fff"
+                    stroke="#14130f"
+                    strokeWidth={1.6}
+                  />
+                  <line x1={79} y1={top + 13} x2={91} y2={top + 13} stroke="#14130f" strokeWidth={1.4} />
+                  <line x1={79} y1={top + 21} x2={91} y2={top + 21} stroke="#14130f" strokeWidth={1.4} />
+                  {s.dot && <circle cx={85} cy={top + 6} r={3.6} fill="#c0512c" />}
+                </g>
+              );
+            })}
 
-        <span className="tube-box">
-          <span className="tube-box-depth" />
-          <span className="tube-box-face">
-            <span className="tube-box-mouth" />
-            <span className="tube-box-word">籤筒</span>
-          </span>
-        </span>
+            {/* 筒身 */}
+            <path
+              d="M53 78 V205 A32 9 0 0 0 117 205 V78"
+              fill="#fff"
+              stroke="#14130f"
+              strokeWidth={1.8}
+            />
+            <ellipse
+              cx={85}
+              cy={78}
+              rx={32}
+              ry={9}
+              fill="#f2f0ea"
+              stroke="#14130f"
+              strokeWidth={1.8}
+            />
+            <text
+              x={85}
+              y={126}
+              textAnchor="middle"
+              fontSize={31}
+              fontWeight={800}
+              letterSpacing={2}
+              fill="#14130f"
+              style={{ writingMode: "vertical-rl" }}
+            >
+              御籤
+            </text>
+          </svg>
+        </button>
 
-        <span className="tube-label">
-          {drawing ? "搖籤中…" : result ? "再抽一支" : "抽 籤"}
+        <span className="flex items-center gap-2 text-[13px] font-semibold tracking-wide text-tb-ink">
+          {drawing ? "搖籤中…" : result ? "再搖一支" : "輕觸籤筒抽一支"}
+          {!drawing && <CircleArrow size={22} className="text-tb-ink" />}
         </span>
-      </button>
+      </div>
 
       <style>{`
         @keyframes omikuji-shake {
-          0%, 100% { transform: rotate(-5deg); }
-          50% { transform: rotate(5deg); }
+          0%, 100% { transform: rotate(-4deg); }
+          50% { transform: rotate(4deg); }
         }
         @keyframes omikuji-reveal {
-          from { opacity: 0; transform: translateY(12px) scale(0.98); }
+          from { opacity: 0; transform: translateY(12px); }
           to { opacity: 1; transform: none; }
         }
-        .omikuji-tube {
-          position: relative;
-          width: 210px;
-          height: 250px;
-          background: transparent;
+        .omikuji-shaker {
           transition: transform 0.15s ease;
-          transform-origin: 50% 90%;
+          transform-origin: 50% 82%;
         }
-        .omikuji-tube:not(:disabled):hover { transform: translateY(-4px); }
-        .omikuji-tube:disabled { cursor: wait; }
-
-        .tube-sticks { position: absolute; left: 105px; bottom: 120px; width: 0; height: 0; }
-        .tube-stick {
-          position: absolute; bottom: 0; width: 11px;
-          border-radius: 2px 2px 1px 1px;
-          transform-origin: bottom center;
-          background:
-            repeating-linear-gradient(0deg, transparent 0 21px, rgba(74,48,8,0.32) 21px 22px),
-            #dfa22a;
-          border: 1px solid #23201a;
-          border-right-width: 2px;
-        }
-        .tube-stick[data-a="-25"] { transform: rotate(-25deg); }
-        .tube-stick[data-a="-9"] { transform: rotate(-9deg); }
-        .tube-stick[data-a="8"] { transform: rotate(8deg); }
-        .tube-stick[data-a="23"] { transform: rotate(23deg); }
-        .tube-knot {
-          position: absolute; top: 12px; left: 50%; width: 11px; height: 11px;
-          margin-left: -5.5px; border-radius: 9999px; background: #bb4e2b;
-          box-shadow: 0 7px 0 -3px #bb4e2b;
-        }
-
-        .tube-box { position: absolute; left: 44px; bottom: 0; width: 122px; height: 150px; }
-        .tube-box-depth {
-          position: absolute; left: 9px; top: -9px; width: 100%; height: 100%;
-          background: #e4ddca; border: 1.5px solid #23201a;
-        }
-        .tube-box-face {
-          position: absolute; inset: 0; overflow: hidden;
-          background: #fbfaf4;
-          border: 1.5px solid #23201a;
-        }
-        .tube-box-mouth {
-          position: absolute; left: 15px; right: 15px; top: 11px; height: 12px;
-          background: #d9d2bf; border: 1.5px solid #23201a;
-        }
-        .tube-box-word {
-          position: absolute; left: 0; right: 0; top: 34px; margin: 0 auto;
-          writing-mode: vertical-rl; text-orientation: upright;
-          font-size: 30px; font-weight: 800; letter-spacing: 4px;
-          color: #23201a; text-align: center;
-        }
-        .tube-label {
-          position: absolute; top: 34px; right: -8px;
-          background: #23201a; color: #f3efe4;
-          font-weight: 800; font-size: 14px; letter-spacing: 2px;
-          padding: 6px 14px; border-radius: 3px; white-space: nowrap;
+        .omikuji-shaker:not(:disabled):hover { transform: translateY(-4px); }
+        .omikuji-shaker:disabled {
+          cursor: wait;
+          animation: omikuji-shake 0.3s ease-in-out infinite;
         }
 
         .omikuji-frame {
           padding: 16px;
-          border-radius: 4px;
-          background-color: #bb4e2b;
+          border: 1px solid #14130f;
+          background-color: #fbfbf9;
           background-image:
-            repeating-linear-gradient(45deg, rgba(243,239,228,0.32) 0 2px, transparent 2px 15px),
-            repeating-linear-gradient(-45deg, rgba(243,239,228,0.32) 0 2px, transparent 2px 15px);
+            repeating-linear-gradient(45deg, #e6e3db 0 1px, transparent 1px 16px),
+            repeating-linear-gradient(-45deg, #e6e3db 0 1px, transparent 1px 16px);
           animation: omikuji-reveal 0.4s ease both;
         }
         .omikuji-paper {
-          background: #fbfaf4;
-          border: 1.5px solid #2c2c2c;
+          background: #ffffff;
+          border: 1.5px solid #14130f;
           padding: 26px 22px 16px;
-          color: #2c2c2c;
+          color: #14130f;
         }
         .omikuji-vertical {
           writing-mode: vertical-rl;
@@ -358,7 +352,7 @@ export default function OmikujiPage() {
             </div>
 
             {/* 菱形徽記 */}
-            <div className="my-6 flex items-center justify-center gap-6">
+            <div className="my-8 flex items-center justify-center gap-6">
               <span className="text-[11px] tracking-[0.25em] text-[#2c2c2c]/70">馭馬奔騰</span>
               <span
                 className="flex h-14 w-14 rotate-45 items-center justify-center border border-[#2c2c2c]"

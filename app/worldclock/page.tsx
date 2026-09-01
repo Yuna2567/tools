@@ -2,51 +2,33 @@
 
 import { useEffect, useMemo, useState } from "react";
 import PageHeader from "@/components/PageHeader";
+import { Kicker, Rule } from "@/components/ui";
 
 const BASE_ZONE = "Asia/Taipei";
 const BASE_LABEL = "中原標準時間";
 
 type City = { zone: string; city: string; flag: string };
-type Group = { title: string; cities: City[] };
 
-const GROUPS: Group[] = [
-  {
-    title: "亞洲・大洋洲",
-    cities: [
-      { zone: "Asia/Tokyo", city: "東京", flag: "🇯🇵" },
-      { zone: "Asia/Seoul", city: "首爾", flag: "🇰🇷" },
-      { zone: "Asia/Hong_Kong", city: "香港", flag: "🇭🇰" },
-      { zone: "Asia/Singapore", city: "新加坡", flag: "🇸🇬" },
-      { zone: "Asia/Bangkok", city: "曼谷", flag: "🇹🇭" },
-      { zone: "Asia/Jakarta", city: "雅加達", flag: "🇮🇩" },
-      { zone: "Asia/Kolkata", city: "新德里", flag: "🇮🇳" },
-      { zone: "Australia/Sydney", city: "雪梨", flag: "🇦🇺" },
-      { zone: "Pacific/Auckland", city: "奧克蘭", flag: "🇳🇿" },
-    ],
-  },
-  {
-    title: "中東・歐洲・非洲",
-    cities: [
-      { zone: "Asia/Dubai", city: "杜拜", flag: "🇦🇪" },
-      { zone: "Europe/Moscow", city: "莫斯科", flag: "🇷🇺" },
-      { zone: "Europe/Istanbul", city: "伊斯坦堡", flag: "🇹🇷" },
-      { zone: "Africa/Cairo", city: "開羅", flag: "🇪🇬" },
-      { zone: "Europe/Paris", city: "巴黎", flag: "🇫🇷" },
-      { zone: "Europe/Berlin", city: "柏林", flag: "🇩🇪" },
-      { zone: "Europe/London", city: "倫敦", flag: "🇬🇧" },
-    ],
-  },
-  {
-    title: "美洲",
-    cities: [
-      { zone: "America/Sao_Paulo", city: "聖保羅", flag: "🇧🇷" },
-      { zone: "America/New_York", city: "紐約", flag: "🇺🇸" },
-      { zone: "America/Chicago", city: "芝加哥", flag: "🇺🇸" },
-      { zone: "America/Denver", city: "丹佛", flag: "🇺🇸" },
-      { zone: "America/Los_Angeles", city: "洛杉磯", flag: "🇺🇸" },
-      { zone: "Pacific/Honolulu", city: "檀香山", flag: "🇺🇸" },
-    ],
-  },
+const CITIES: City[] = [
+  { zone: "Asia/Tokyo", city: "東京", flag: "🇯🇵" },
+  { zone: "Asia/Seoul", city: "首爾", flag: "🇰🇷" },
+  { zone: "Asia/Hong_Kong", city: "香港", flag: "🇭🇰" },
+  { zone: "Asia/Singapore", city: "新加坡", flag: "🇸🇬" },
+  { zone: "Asia/Bangkok", city: "曼谷", flag: "🇹🇭" },
+  { zone: "Asia/Jakarta", city: "雅加達", flag: "🇮🇩" },
+  { zone: "Asia/Kolkata", city: "新德里", flag: "🇮🇳" },
+  { zone: "Asia/Dubai", city: "杜拜", flag: "🇦🇪" },
+  { zone: "Europe/Moscow", city: "莫斯科", flag: "🇷🇺" },
+  { zone: "Europe/Istanbul", city: "伊斯坦堡", flag: "🇹🇷" },
+  { zone: "Europe/Paris", city: "巴黎", flag: "🇫🇷" },
+  { zone: "Europe/London", city: "倫敦", flag: "🇬🇧" },
+  { zone: "America/Sao_Paulo", city: "聖保羅", flag: "🇧🇷" },
+  { zone: "America/New_York", city: "紐約", flag: "🇺🇸" },
+  { zone: "America/Chicago", city: "芝加哥", flag: "🇺🇸" },
+  { zone: "America/Los_Angeles", city: "洛杉磯", flag: "🇺🇸" },
+  { zone: "Pacific/Honolulu", city: "檀香山", flag: "🇺🇸" },
+  { zone: "Australia/Sydney", city: "雪梨", flag: "🇦🇺" },
+  { zone: "Pacific/Auckland", city: "奧克蘭", flag: "🇳🇿" },
 ];
 
 function parts(zone: string, d: Date) {
@@ -58,7 +40,6 @@ function parts(zone: string, d: Date) {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
   });
   const p: Record<string, number> = {};
   for (const { type, value } of f.formatToParts(d)) {
@@ -70,25 +51,8 @@ function parts(zone: string, d: Date) {
 
 function offsetMinutes(zone: string, d: Date) {
   const p = parts(zone, d);
-  const asUTC = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+  const asUTC = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, 0);
   return Math.round((asUTC - d.getTime()) / 60000);
-}
-
-function utcLabel(min: number) {
-  const sign = min < 0 ? "−" : "+";
-  const a = Math.abs(min);
-  const h = Math.floor(a / 60);
-  const m = a % 60;
-  return `UTC${sign}${h}${m ? ":" + String(m).padStart(2, "0") : ""}`;
-}
-
-function diffLabel(min: number) {
-  const sign = min < 0 ? "−" : "+";
-  const a = Math.abs(min);
-  const h = Math.floor(a / 60);
-  const m = a % 60;
-  if (min === 0) return "同時";
-  return `${sign}${h}${m ? " 小時 " + m + " 分" : " 小時"}`;
 }
 
 function pad(n: number) {
@@ -97,20 +61,51 @@ function pad(n: number) {
 
 const WEEKDAY = ["日", "一", "二", "三", "四", "五", "六"];
 
+function phrase(h: number) {
+  if (h < 5) return "深夜";
+  if (h < 6) return "拂曉";
+  if (h < 9) return "清晨";
+  if (h < 12) return "上午";
+  if (h < 14) return "中午";
+  if (h < 18) return "下午";
+  if (h < 21) return "傍晚";
+  return "晚上";
+}
+
+// 0 = 適合聯絡(白天)，1 = 邊緣(剛起床/快睡)，2 = 睡眠時間
+function band(h: number) {
+  if (h >= 8 && h <= 21) return 0;
+  if (h === 6 || h === 7 || h === 22 || h === 23) return 1;
+  return 2;
+}
+const BAND_META = [
+  { key: 0, label: "適合聯絡", note: "當地約 8:00–22:00，多半醒著", dot: "var(--tb-sage)" },
+  { key: 1, label: "剛起床或快睡了", note: "傳訊息還行，打電話留意一下", dot: "var(--tb-amber)" },
+  { key: 2, label: "深夜・別打擾", note: "當地在睡覺", dot: "var(--tb-clay)" },
+];
+
+function diffText(min: number) {
+  if (min === 0) return "與台北同時";
+  const slow = min < 0;
+  const a = Math.abs(min);
+  const h = Math.floor(a / 60);
+  const m = a % 60;
+  const hm = `${h} 小時${m ? ` ${m} 分` : ""}`;
+  return slow ? `比台北慢 ${hm}` : `比台北快 ${hm}`;
+}
+
 export default function WorldClockPage() {
   const [now, setNow] = useState<Date | null>(null);
   const [mode, setMode] = useState<"live" | "fixed">("live");
-  const [fixed, setFixed] = useState("12:00");
+  const [fixed, setFixed] = useState("15:00");
 
   useEffect(() => {
-    // 掛載後才取得時間，避免 SSR/CSR hydration 不一致
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setNow(new Date());
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
   }, []);
 
-  // 基準時刻（instant）
   const instant = useMemo(() => {
     if (!now) return null;
     if (mode === "live") return now;
@@ -122,9 +117,32 @@ export default function WorldClockPage() {
     );
   }, [now, mode, fixed]);
 
+  const rows = useMemo(() => {
+    if (!instant) return [];
+    const bp = parts(BASE_ZONE, instant);
+    const baseOff = offsetMinutes(BASE_ZONE, instant);
+    const baseDay = Date.UTC(bp.year, bp.month - 1, bp.day);
+    return CITIES.map((c) => {
+      const p = parts(c.zone, instant);
+      const rel = offsetMinutes(c.zone, instant) - baseOff;
+      const dayDelta = Math.round(
+        (Date.UTC(p.year, p.month - 1, p.day) - baseDay) / 86400000,
+      );
+      return {
+        ...c,
+        hour: p.hour,
+        minute: p.minute,
+        weekday: new Date(Date.UTC(p.year, p.month - 1, p.day)).getUTCDay(),
+        rel,
+        dayDelta,
+        b: band(p.hour),
+      };
+    }).sort((a, b) => Math.abs(a.rel) - Math.abs(b.rel) || a.rel - b.rel);
+  }, [instant]);
+
   if (!instant) {
     return (
-      <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-8 px-5 py-12 sm:px-8">
+      <main className="mx-auto min-h-screen w-full max-w-5xl px-5 py-12 sm:px-8">
         <PageHeader eyebrow="World Clock" title="世界時間">
           載入中…
         </PageHeader>
@@ -133,38 +151,38 @@ export default function WorldClockPage() {
   }
 
   const bp = parts(BASE_ZONE, instant);
-  const baseOff = offsetMinutes(BASE_ZONE, instant);
-  const baseDay = Date.UTC(bp.year, bp.month - 1, bp.day);
-  const baseWeekday = new Date(baseDay).getUTCDay();
+  const baseWeekday = new Date(
+    Date.UTC(bp.year, bp.month - 1, bp.day),
+  ).getUTCDay();
+  const okCities = rows.filter((r) => r.b === 0);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col gap-10 px-5 py-12 sm:px-8">
+    <main className="mx-auto min-h-screen w-full max-w-5xl px-5 py-12 sm:px-8">
       <PageHeader eyebrow="World Clock" title="世界時間">
-        以「{BASE_LABEL}」（{utcLabel(baseOff)}）為基準，對照世界各地此刻幾點、差幾個小時、是白天還是晚上。
+        用「{BASE_LABEL}」（台灣的 UTC+8）當基準，一眼看出世界各地現在幾點、
+        還醒著嗎、適不適合現在敲他。
       </PageHeader>
 
-      {/* 基準時鐘 */}
-      <section className="tb-card flex flex-col gap-4 p-6 sm:flex-row sm:items-end sm:justify-between sm:p-8">
+      {/* 台北基準 */}
+      <section className="mt-10 flex flex-col gap-5 border border-tb-line p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div>
-          <span className="tb-eyebrow text-tb-ink-soft">{BASE_LABEL}・臺北</span>
-          <div className="mt-1 font-mono text-5xl font-bold tabular-nums tracking-tight text-tb-ink sm:text-6xl">
+          <Kicker label="Taipei" sub={`${BASE_LABEL}・UTC+8`} />
+          <div className="mt-2 font-mono text-5xl font-bold tabular-nums tracking-tight text-tb-ink sm:text-6xl">
             {pad(bp.hour)}
-            <span className="text-tb-ink-soft">:</span>
+            <span className="mx-0.5 text-tb-ink-soft">:</span>
             {pad(bp.minute)}
-            <span className="text-2xl text-tb-ink-soft sm:text-3xl">
-              :{pad(bp.second)}
-            </span>
           </div>
-          <p className="mt-1 text-sm text-tb-ink-soft">
-            {bp.year} 年 {bp.month} 月 {bp.day} 日・週{WEEKDAY[baseWeekday]}
+          <p className="mt-1.5 text-sm text-tb-ink-soft">
+            {bp.year} 年 {bp.month} 月 {bp.day} 日・週{WEEKDAY[baseWeekday]}・
+            {phrase(bp.hour)}
           </p>
         </div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-1 self-start rounded-sm border border-tb-line p-1 text-xs">
+        <div className="flex flex-col gap-3 sm:items-end">
+          <div className="flex gap-1 rounded-sm border border-tb-line p-1 text-xs">
             <button
               onClick={() => setMode("live")}
-              className={`rounded-[3px] px-3 py-1 font-semibold transition-colors ${
+              className={`rounded-[2px] px-3 py-1 font-semibold transition-colors ${
                 mode === "live"
                   ? "bg-tb-ink text-tb-bg"
                   : "text-tb-ink-soft hover:text-tb-ink"
@@ -174,18 +192,18 @@ export default function WorldClockPage() {
             </button>
             <button
               onClick={() => setMode("fixed")}
-              className={`rounded-[3px] px-3 py-1 font-semibold transition-colors ${
+              className={`rounded-[2px] px-3 py-1 font-semibold transition-colors ${
                 mode === "fixed"
                   ? "bg-tb-ink text-tb-bg"
                   : "text-tb-ink-soft hover:text-tb-ink"
               }`}
             >
-              指定時間
+              假設一個時間
             </button>
           </div>
           {mode === "fixed" && (
             <label className="flex items-center gap-2 text-xs text-tb-ink-soft">
-              當{BASE_LABEL}為
+              當台北是
               <input
                 type="time"
                 value={fixed}
@@ -197,59 +215,86 @@ export default function WorldClockPage() {
         </div>
       </section>
 
-      {/* 各地時間 */}
-      <div className="flex flex-col gap-8">
-        {GROUPS.map((g) => (
-          <section key={g.title}>
-            <h2 className="tb-eyebrow mb-2 text-tb-ink-soft">{g.title}</h2>
-            <ul className="border-t border-tb-line">
-              {g.cities.map((c) => {
-                const p = parts(c.zone, instant);
-                const off = offsetMinutes(c.zone, instant) - baseOff;
-                const dayDelta =
-                  Math.round(
-                    (Date.UTC(p.year, p.month - 1, p.day) - baseDay) / 86400000,
-                  );
-                const isDay = p.hour >= 6 && p.hour < 18;
-                return (
+      {/* 一句話摘要 */}
+      <p className="mt-6 text-sm leading-7 text-tb-ink">
+        {mode === "fixed" ? "那個時候，" : "現在，"}
+        名單裡有{" "}
+        <span className="font-bold text-tb-ink">{okCities.length}</span> /{" "}
+        {rows.length} 個城市適合聯絡
+        {okCities.length > 0 && (
+          <span className="text-tb-ink-soft">
+            （{okCities.slice(0, 5).map((c) => c.city).join("、")}
+            {okCities.length > 5 ? " 等" : ""}）
+          </span>
+        )}
+        。
+      </p>
+
+      {/* 依狀態分組 */}
+      <div className="mt-8 flex flex-col gap-10">
+        {BAND_META.map((bm) => {
+          const list = rows.filter((r) => r.b === bm.key);
+          if (list.length === 0) return null;
+          return (
+            <section key={bm.key}>
+              <Rule />
+              <div className="flex items-baseline justify-between pt-3">
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className="h-2.5 w-2.5 rounded-full"
+                    style={{ background: bm.dot }}
+                  />
+                  <h2 className="text-base font-bold text-tb-ink">{bm.label}</h2>
+                  <span className="text-xs text-tb-ink-soft">{list.length} 個</span>
+                </div>
+                <span className="hidden text-xs text-tb-ink-soft sm:block">
+                  {bm.note}
+                </span>
+              </div>
+
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {list.map((r) => (
                   <li
-                    key={c.zone}
-                    className="grid grid-cols-[1.4rem_1fr_auto] items-center gap-x-3 gap-y-0.5 border-b border-tb-line py-3 sm:grid-cols-[1.6rem_10rem_1fr_auto] sm:gap-x-5"
+                    key={r.zone}
+                    className="flex flex-col gap-2 border border-tb-line p-4"
                   >
-                    <span aria-hidden className="text-lg">
-                      {c.flag}
-                    </span>
-                    <span className="font-semibold text-tb-ink">{c.city}</span>
-
-                    <span className="col-start-2 row-start-2 text-[11px] text-tb-ink-soft sm:col-start-3 sm:row-start-1">
-                      {utcLabel(offsetMinutes(c.zone, instant))} ·{" "}
-                      {off === 0 ? "同時" : diffLabel(off)}
-                      {dayDelta !== 0 && (
-                        <span className="ml-1 text-tb-clay">
-                          （{dayDelta > 0 ? "明日" : "昨日"}）
+                    <div className="flex items-center justify-between">
+                      <span className="flex items-center gap-2">
+                        <span aria-hidden className="text-lg">
+                          {r.flag}
                         </span>
-                      )}
-                    </span>
+                        <span className="font-bold text-tb-ink">{r.city}</span>
+                      </span>
+                      <span className="text-[11px] text-tb-ink-soft">
+                        {phrase(r.hour)}
+                      </span>
+                    </div>
 
-                    <span className="col-start-3 row-start-1 flex items-baseline gap-1.5 justify-self-end font-mono tabular-nums text-tb-ink sm:col-start-4">
-                      <span aria-hidden className="text-xs text-tb-ink-soft">
-                        {isDay ? "☀" : "☾"}
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-mono text-2xl font-bold tabular-nums text-tb-ink">
+                        {pad(r.hour)}:{pad(r.minute)}
                       </span>
-                      <span className="text-lg font-semibold sm:text-xl">
-                        {pad(p.hour)}:{pad(p.minute)}
+                      <span className="text-xs text-tb-ink-soft">
+                        週{WEEKDAY[r.weekday]}
+                        {r.dayDelta === -1 && "・昨天"}
+                        {r.dayDelta === 1 && "・明天"}
                       </span>
-                    </span>
+                    </div>
+
+                    <p className="text-[11px] text-tb-ink-soft">
+                      {diffText(r.rel)}
+                    </p>
                   </li>
-                );
-              })}
-            </ul>
-          </section>
-        ))}
+                ))}
+              </ul>
+            </section>
+          );
+        })}
       </div>
 
-      <p className="text-xs leading-6 text-tb-ink-soft">
-        時區與日光節約時間依你裝置的 Intl 資料計算。「{BASE_LABEL}」是臺灣採用的
-        UTC+8 時區舊稱，與香港、新加坡、北京同一時區。
+      <p className="mt-10 text-xs leading-6 text-tb-ink-soft">
+        時區與日光節約時間依你裝置的資料自動計算。「{BASE_LABEL}」是台灣採用的
+        UTC+8 時區舊稱，和香港、新加坡、北京同一時區。
       </p>
     </main>
   );

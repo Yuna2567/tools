@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { Rule } from "@/components/ui";
 
 export default function PageHeader({
   eyebrow,
@@ -11,16 +12,17 @@ export default function PageHeader({
   children?: ReactNode;
 }) {
   return (
-    <header className="flex w-full flex-col gap-3 border-b border-tb-line pb-7">
+    <header className="flex w-full flex-col gap-4">
       <Link
         href="/"
-        className="text-[13px] font-medium text-tb-ink-soft transition-colors hover:text-tb-ink"
+        className="text-[12px] tracking-wide text-tb-ink-soft transition-colors hover:text-tb-ink"
       >
         ← 回工具箱
       </Link>
-      <div className="flex flex-col gap-1.5">
+      <Rule />
+      <div className="flex flex-col gap-2 pt-3">
         <span className="tb-eyebrow text-tb-ink-soft">{eyebrow}</span>
-        <h1 className="font-display text-3xl font-extrabold tracking-tight text-tb-ink sm:text-4xl">
+        <h1 className="text-[2rem] font-extrabold leading-tight tracking-tight text-tb-ink sm:text-[2.6rem]">
           {title}
         </h1>
       </div>

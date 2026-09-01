@@ -5,9 +5,6 @@ export type Tool = {
   en: string;
   blurb: string;
   detail: string;
-  /* landing 右欄色板用色 */
-  plate: string;
-  plateInk: string;
 };
 
 export const TOOLS: Tool[] = [
@@ -19,8 +16,6 @@ export const TOOLS: Tool[] = [
     blurb: "把名字丟進去，讓轉盤決定今天的幸運兒。",
     detail:
       "貼上參加者或獎項清單，轉盤自動分格上色。支援中獎後移除、保留每一次的抽獎紀錄。",
-    plate: "var(--tb-amber)",
-    plateInk: "#23201a",
   },
   {
     href: "/pomodoro",
@@ -30,8 +25,6 @@ export const TOOLS: Tool[] = [
     blurb: "專注 25 分鐘，休息 5 分鐘，一輪一輪把事情做完。",
     detail:
       "專注 / 短休 / 長休三段循環，記下每一輪在做什麼，看今天累積了多少專注時間。",
-    plate: "var(--tb-sage)",
-    plateInk: "#f3efe4",
   },
   {
     href: "/omikuji",
@@ -41,18 +34,14 @@ export const TOOLS: Tool[] = [
     blurb: "搖一支籤，看看今天的運氣是超大吉還是大凶。",
     detail:
       "九種吉凶籤詩，附上戀愛、事業、財運等面向建議與幸運色。每天一支，隔日再抽。",
-    plate: "var(--tb-clay)",
-    plateInk: "#f3efe4",
   },
   {
     href: "/worldclock",
     emoji: "🕰️",
     name: "世界時間",
     en: "World Clock",
-    blurb: "以中原標準時間為準，看世界各地此刻幾點。",
+    blurb: "以台北時間為準，看世界各地此刻幾點、誰還醒著。",
     detail:
-      "中原標準時間（UTC+8）對照全球十多個城市，顯示時差、日夜與日期差；也能指定一個時間點來換算。",
-    plate: "var(--tb-indigo)",
-    plateInk: "#f3efe4",
+      "把城市依「適合聯絡 / 剛起床 / 深夜」分組，附時差、日夜與日期差；也能假設一個台北時間來換算。",
   },
 ];

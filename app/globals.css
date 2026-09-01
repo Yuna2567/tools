@@ -1,30 +1,30 @@
 @import "tailwindcss";
 
-/* dark: 變體僅在 .dark class 下生效（本站固定亮色紙感主題） */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* 紙感編輯風配色 —— 平塗、無漸層 */
-  --tb-bg: #f3efe4; /* 紙 */
-  --tb-panel: #eae4d3; /* 面板（深一階）*/
-  --tb-card: #fbfaf4; /* 卡片底 */
-  --tb-ink: #23201a; /* 主文字 / 近黑 */
-  --tb-ink-soft: #6c665a; /* 次要文字 */
-  --tb-line: #d9d2bf; /* 髮絲線 */
+  /* 單色編輯風（參考 afuribrewing.com）：近白底、近黑字、髮絲線 */
+  --tb-bg: #fbfbf9;
+  --tb-panel: #f2f0ea; /* 圖框 / 預覽底 */
+  --tb-card: #ffffff;
+  --tb-ink: #14130f; /* 主文字 / 近黑 */
+  --tb-ink-soft: #6a6760; /* 次要文字 */
+  --tb-line: #e3e1d9; /* 髮絲線 */
 
-  --tb-amber: #dfa22a; /* 強調一：芥末黃 */
-  --tb-clay: #bb4e2b; /* 強調二：磚紅 */
-  --tb-indigo: #34417a; /* 強調三：靛藍 */
-  --tb-sage: #5c7150; /* 強調四：橄欖綠 */
+  /* 各工具內部的招牌色（外殼維持單色，只在工具內使用）*/
+  --tb-amber: #dca42b;
+  --tb-clay: #c0512c;
+  --tb-indigo: #33417a;
+  --tb-sage: #5c7150;
 
-  /* 舊 token 對應（沿用既有 class 名稱） */
-  --tb-rose: var(--tb-clay);
+  /* 舊 token 對應 */
+  --tb-rose: var(--tb-ink);
   --tb-rose-deep: var(--tb-ink);
   --tb-purple: var(--tb-indigo);
   --tb-gold: var(--tb-amber);
-  --tb-cream: #efe8d4;
+  --tb-cream: #f2efe6;
   --tb-pink: var(--tb-panel);
-  --tb-pink-soft: #ded6c2;
+  --tb-pink-soft: #eae7dd;
 
   --background: var(--tb-bg);
   --foreground: var(--tb-ink);
@@ -50,11 +50,11 @@
   --color-tb-cream: var(--tb-cream);
   --color-tb-pink: var(--tb-pink);
   --color-tb-pink-soft: var(--tb-pink-soft);
-  --font-sans: var(--font-hanken), var(--font-geist-sans), "PingFang TC",
-    "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-sans: var(--font-hanken), "PingFang TC", "Noto Sans TC",
+    "Microsoft JhengHei", sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-display: var(--font-hanken), var(--font-geist-sans), "PingFang TC",
-    "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-display: var(--font-hanken), "PingFang TC", "Noto Sans TC",
+    "Microsoft JhengHei", sans-serif;
 }
 
 html {
@@ -65,20 +65,62 @@ body {
   min-height: 100vh;
   color: var(--foreground);
   background: var(--tb-bg);
-  font-family: var(--font-hanken), var(--font-geist-sans), "PingFang TC",
-    "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+  font-family: var(--font-hanken), "PingFang TC", "Noto Sans TC",
+    "Microsoft JhengHei", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--tb-amber);
-  color: var(--tb-ink);
+  background: var(--tb-ink);
+  color: var(--tb-bg);
 }
 
-/* ── 共用元件（平塗、方正、髮絲線，無陰影漸層）── */
+/* ── afuri 風格元件 ── */
+
+/* 章節上緣：髮絲線 + 左端粗記號 */
+.tb-rule {
+  position: relative;
+  border-top: 1px solid var(--tb-line);
+}
+.tb-rule::before {
+  content: "";
+  position: absolute;
+  top: -1.5px;
+  left: 0;
+  width: 2.75rem;
+  height: 3px;
+  background: var(--tb-ink);
+}
+
+/* 大寫拉丁小標 */
+.tb-eyebrow {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-weight: 700;
+  font-size: 0.68rem;
+}
+
+/* 海報級拉丁大標 */
+.tb-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.95;
+}
+
+/* 點點分隔 */
+.tb-dots {
+  color: var(--tb-line);
+  letter-spacing: 0.35em;
+  font-size: 0.7rem;
+  user-select: none;
+}
+
 .tb-card {
   border: 1px solid var(--tb-line);
-  border-radius: 6px;
   background: var(--tb-card);
 }
 
@@ -86,16 +128,15 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  border-radius: 3px;
-  padding: 0.7rem 1.6rem;
+  gap: 0.55rem;
+  border-radius: 2px;
+  padding: 0.7rem 1.5rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
   transition: background-color 0.16s ease, color 0.16s ease,
     transform 0.16s ease;
 }
 .tb-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 .tb-btn-primary {
@@ -115,10 +156,10 @@ body {
 }
 
 .tb-input {
-  border-radius: 3px;
+  border-radius: 2px;
   border: 1px solid var(--tb-line);
   background: var(--tb-card);
-  padding: 0.6rem 0.85rem;
+  padding: 0.6rem 0.8rem;
   color: var(--tb-ink);
   outline: none;
 }
@@ -127,13 +168,4 @@ body {
 }
 .tb-input:focus {
   border-color: var(--tb-ink);
-}
-
-/* 小標籤：字距拉開的英文/標號 */
-.tb-eyebrow {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: 0.24em;
-  font-weight: 600;
-  font-size: 0.7rem;
 }
