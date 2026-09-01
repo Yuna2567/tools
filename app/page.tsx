@@ -28,8 +28,8 @@ export default function Home() {
 
           <div className="mt-10 grid gap-8 border-t border-tb-line pt-8 sm:grid-cols-[1fr_auto] sm:items-end">
             <p className="max-w-md text-[15px] leading-7 text-tb-ink">
-              五個各司其職的小工具，收在同一個盒子裡。
-              抽獎、專注、看運勢、對時差、轉扭蛋——
+              六個各司其職的小工具，收在同一個盒子裡。
+              抽獎、專注、看運勢、對時差、轉扭蛋、配顏色——
               不用註冊、不用安裝，點開就能用，資料只留在你的裝置。
             </p>
             <a
@@ -44,7 +44,7 @@ export default function Home() {
 
         {/* Tools — 一列排開 */}
         <section id="tools" className="scroll-mt-20 pb-4">
-          <div className="grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-x-5 gap-y-12 sm:grid-cols-3 lg:grid-cols-6">
             {TOOLS.map((t, i) => (
               <Link key={t.href} href={t.href} className="group flex flex-col">
                 <Rule />

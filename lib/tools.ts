@@ -53,4 +53,13 @@ export const TOOLS: Tool[] = [
     detail:
       "把選項當成扭蛋，轉動旋鈕、蛋殼喀一聲彈開，隨機抽出一個結果。可保留剛剛轉到的紀錄。",
   },
+  {
+    href: "/palette",
+    emoji: "🎨",
+    name: "配色參考",
+    en: "Palettes",
+    blurb: "網頁配色靈感，亮版暗版都有，還能評分。",
+    detail:
+      "六組網頁配色，各附亮版與暗版；可即時改色、看 UI 預覽，並依 WCAG 對比算出可讀性評分。",
+  },
 ];

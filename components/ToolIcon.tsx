@@ -55,6 +55,14 @@ export default function ToolIcon({ name, className }: Props) {
           <circle cx="24" cy="33" r="3.4" />
         </svg>
       );
+    case "/palette":
+      return (
+        <svg viewBox="0 0 48 48" className={className} {...common}>
+          <rect x="8" y="8" width="32" height="32" rx="3" />
+          <path d="M24 8v32M8 24h32" />
+          <circle cx="16" cy="16" r="3" />
+        </svg>
+      );
     default:
       return null;
   }
