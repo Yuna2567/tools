@@ -280,17 +280,28 @@ export default function OmikujiPage() {
               stroke="#14130f"
               strokeWidth={1.8}
             />
+            {/* 直書：兩字各自置中，避免 writing-mode 造成偏移 */}
             <text
               x={90}
-              y={132}
+              y={144}
               textAnchor="middle"
-              fontSize={30}
+              dominantBaseline="central"
+              fontSize={28}
               fontWeight={800}
-              letterSpacing={3}
               fill="#14130f"
-              style={{ writingMode: "vertical-rl" }}
             >
-              御籤
+              御
+            </text>
+            <text
+              x={90}
+              y={180}
+              textAnchor="middle"
+              dominantBaseline="central"
+              fontSize={28}
+              fontWeight={800}
+              fill="#14130f"
+            >
+              籤
             </text>
           </svg>
         </button>
