@@ -1,26 +1,107 @@
 @import "tailwindcss";
 
+/* 只在 .dark class 下才套用 dark: 變體（本專案固定亮色粉紅主題，不隨系統切換） */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 工具箱主色（參考轉盤配色） */
+  --tb-bg: #fbe4ea;
+  --tb-pink: #f3aecb; /* 轉盤外圈 */
+  --tb-pink-soft: #f7c4d9;
+  --tb-rose: #ec5f92; /* 主要按鈕 / 重點 */
+  --tb-rose-deep: #b83d6d; /* 標題文字 */
+  --tb-purple: #9c86d8; /* 次要重點（GO 鈕） */
+  --tb-gold: #f4c95b; /* 燈點 */
+  --tb-cream: #fce9ad; /* 扇形淺色 */
+  --tb-ink: #4a2c39; /* 內文 */
+  --tb-line: #f3c6d5; /* 卡片描邊 */
+
+  --background: var(--tb-bg);
+  --foreground: var(--tb-ink);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-tb-bg: var(--tb-bg);
+  --color-tb-pink: var(--tb-pink);
+  --color-tb-pink-soft: var(--tb-pink-soft);
+  --color-tb-rose: var(--tb-rose);
+  --color-tb-rose-deep: var(--tb-rose-deep);
+  --color-tb-purple: var(--tb-purple);
+  --color-tb-gold: var(--tb-gold);
+  --color-tb-cream: var(--tb-cream);
+  --color-tb-ink: var(--tb-ink);
+  --color-tb-line: var(--tb-line);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-space-grotesk), var(--font-geist-sans),
+    "PingFang TC", "Microsoft JhengHei", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
+  min-height: 100vh;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), "PingFang TC", "Microsoft JhengHei", Arial,
+    sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%, #fdeef2 0%, #f9d9e2 42%, #f4c1d1 100%)
+      fixed,
+    var(--tb-bg);
+}
+
+/* ── 共用元件樣式 ── */
+.tb-card {
+  border-radius: 1.25rem;
+  border: 1px solid var(--tb-line);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 16px 44px -20px rgba(236, 95, 146, 0.45);
+}
+
+.tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.7rem 2rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.tb-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.tb-btn-primary {
+  background: var(--tb-rose);
+  color: #fff;
+  box-shadow: 0 10px 24px -10px rgba(236, 95, 146, 0.7);
+}
+.tb-btn-primary:not(:disabled):hover {
+  transform: scale(1.05);
+}
+.tb-btn-primary:not(:disabled):active {
+  transform: scale(0.96);
+}
+.tb-btn-ghost {
+  border: 1px solid #e9a9c1;
+  color: var(--tb-rose-deep);
+}
+.tb-btn-ghost:not(:disabled):hover {
+  background: var(--tb-bg);
+}
+
+.tb-input {
+  border-radius: 0.6rem;
+  border: 1px solid #eebdce;
+  background: #fff;
+  padding: 0.6rem 0.85rem;
+  outline: none;
+}
+.tb-input:focus {
+  border-color: var(--tb-rose);
 }
