@@ -44,6 +44,17 @@ export default function ToolIcon({ name, className }: Props) {
           <path d="M9.5 19h29M9.5 29h29" />
         </svg>
       );
+    case "/gacha":
+      return (
+        <svg viewBox="0 0 48 48" className={className} {...common}>
+          <circle cx="24" cy="18" r="12" />
+          <circle cx="21" cy="15" r="3" />
+          <circle cx="28" cy="20" r="2.4" />
+          <path d="M12 26h24v12a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2z" />
+          <path d="M20 40v3h8v-3" />
+          <circle cx="24" cy="33" r="3.4" />
+        </svg>
+      );
     default:
       return null;
   }

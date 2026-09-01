@@ -235,18 +235,18 @@ export default function OmikujiPage() {
           aria-label="抽籤"
           className="omikuji-shaker"
         >
-          <svg viewBox="0 0 170 250" className="block h-60 w-auto">
-            {/* 竹籤 */}
+          <svg viewBox="0 0 180 250" className="block h-60 w-auto">
+            {/* 竹籤（先畫，下段會被筒身與筒口蓋住）*/}
             {[
-              { deg: -23, len: 116, dot: false },
-              { deg: -6, len: 132, dot: false },
-              { deg: 15, len: 104, dot: true },
+              { deg: -19, len: 96, dot: false },
+              { deg: -4, len: 108, dot: false },
+              { deg: 16, len: 82, dot: true },
             ].map((s, i) => {
-              const top = 82 - s.len;
+              const top = 104 - s.len;
               return (
-                <g key={i} transform={`rotate(${s.deg} 85 82)`}>
+                <g key={i} transform={`rotate(${s.deg} 90 104)`}>
                   <rect
-                    x={79}
+                    x={84}
                     y={top}
                     width={12}
                     height={s.len}
@@ -255,36 +255,38 @@ export default function OmikujiPage() {
                     stroke="#14130f"
                     strokeWidth={1.6}
                   />
-                  <line x1={79} y1={top + 13} x2={91} y2={top + 13} stroke="#14130f" strokeWidth={1.4} />
-                  <line x1={79} y1={top + 21} x2={91} y2={top + 21} stroke="#14130f" strokeWidth={1.4} />
-                  {s.dot && <circle cx={85} cy={top + 6} r={3.6} fill="#c0512c" />}
+                  <line x1={84} y1={top + 13} x2={96} y2={top + 13} stroke="#14130f" strokeWidth={1.4} />
+                  <line x1={84} y1={top + 21} x2={96} y2={top + 21} stroke="#14130f" strokeWidth={1.4} />
+                  {s.dot && <circle cx={90} cy={top + 6} r={3.6} fill="#c0512c" />}
                 </g>
               );
             })}
 
             {/* 筒身 */}
             <path
-              d="M53 78 V205 A32 9 0 0 0 117 205 V78"
+              d="M56 96 L56 206 Q56 222 72 222 L108 222 Q124 222 124 206 L124 96"
               fill="#fff"
               stroke="#14130f"
               strokeWidth={1.8}
+              strokeLinejoin="round"
             />
+            {/* 筒口 */}
             <ellipse
-              cx={85}
-              cy={78}
-              rx={32}
-              ry={9}
+              cx={90}
+              cy={96}
+              rx={34}
+              ry={11}
               fill="#f2f0ea"
               stroke="#14130f"
               strokeWidth={1.8}
             />
             <text
-              x={85}
-              y={126}
+              x={90}
+              y={132}
               textAnchor="middle"
-              fontSize={31}
+              fontSize={30}
               fontWeight={800}
-              letterSpacing={2}
+              letterSpacing={3}
               fill="#14130f"
               style={{ writingMode: "vertical-rl" }}
             >
