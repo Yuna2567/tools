@@ -1,20 +1,30 @@
 @import "tailwindcss";
 
-/* 只在 .dark class 下才套用 dark: 變體（本專案固定亮色粉紅主題，不隨系統切換） */
+/* dark: 變體僅在 .dark class 下生效（本站固定亮色紙感主題） */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* 工具箱主色（參考轉盤配色） */
-  --tb-bg: #fbe4ea;
-  --tb-pink: #f3aecb; /* 轉盤外圈 */
-  --tb-pink-soft: #f7c4d9;
-  --tb-rose: #ec5f92; /* 主要按鈕 / 重點 */
-  --tb-rose-deep: #b83d6d; /* 標題文字 */
-  --tb-purple: #9c86d8; /* 次要重點（GO 鈕） */
-  --tb-gold: #f4c95b; /* 燈點 */
-  --tb-cream: #fce9ad; /* 扇形淺色 */
-  --tb-ink: #4a2c39; /* 內文 */
-  --tb-line: #f3c6d5; /* 卡片描邊 */
+  /* 紙感編輯風配色 —— 平塗、無漸層 */
+  --tb-bg: #f3efe4; /* 紙 */
+  --tb-panel: #eae4d3; /* 面板（深一階）*/
+  --tb-card: #fbfaf4; /* 卡片底 */
+  --tb-ink: #23201a; /* 主文字 / 近黑 */
+  --tb-ink-soft: #6c665a; /* 次要文字 */
+  --tb-line: #d9d2bf; /* 髮絲線 */
+
+  --tb-amber: #dfa22a; /* 強調一：芥末黃 */
+  --tb-clay: #bb4e2b; /* 強調二：磚紅 */
+  --tb-indigo: #34417a; /* 強調三：靛藍 */
+  --tb-sage: #5c7150; /* 強調四：橄欖綠 */
+
+  /* 舊 token 對應（沿用既有 class 名稱） */
+  --tb-rose: var(--tb-clay);
+  --tb-rose-deep: var(--tb-ink);
+  --tb-purple: var(--tb-indigo);
+  --tb-gold: var(--tb-amber);
+  --tb-cream: #efe8d4;
+  --tb-pink: var(--tb-panel);
+  --tb-pink-soft: #ded6c2;
 
   --background: var(--tb-bg);
   --foreground: var(--tb-ink);
@@ -24,19 +34,27 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-tb-bg: var(--tb-bg);
-  --color-tb-pink: var(--tb-pink);
-  --color-tb-pink-soft: var(--tb-pink-soft);
+  --color-tb-panel: var(--tb-panel);
+  --color-tb-card: var(--tb-card);
+  --color-tb-ink: var(--tb-ink);
+  --color-tb-ink-soft: var(--tb-ink-soft);
+  --color-tb-line: var(--tb-line);
+  --color-tb-amber: var(--tb-amber);
+  --color-tb-clay: var(--tb-clay);
+  --color-tb-indigo: var(--tb-indigo);
+  --color-tb-sage: var(--tb-sage);
   --color-tb-rose: var(--tb-rose);
   --color-tb-rose-deep: var(--tb-rose-deep);
   --color-tb-purple: var(--tb-purple);
   --color-tb-gold: var(--tb-gold);
   --color-tb-cream: var(--tb-cream);
-  --color-tb-ink: var(--tb-ink);
-  --color-tb-line: var(--tb-line);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-display: var(--font-space-grotesk), var(--font-geist-sans),
-    "PingFang TC", "Microsoft JhengHei", sans-serif;
+  --color-tb-pink: var(--tb-pink);
+  --color-tb-pink-soft: var(--tb-pink-soft);
+  --font-sans: var(--font-hanken), var(--font-geist-sans), "PingFang TC",
+    "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-display: var(--font-hanken), var(--font-geist-sans), "PingFang TC",
+    "Noto Sans TC", "Microsoft JhengHei", sans-serif;
 }
 
 html {
@@ -46,20 +64,22 @@ html {
 body {
   min-height: 100vh;
   color: var(--foreground);
-  font-family: var(--font-geist-sans), "PingFang TC", "Microsoft JhengHei", Arial,
-    sans-serif;
-  background:
-    radial-gradient(circle at 50% -10%, #fdeef2 0%, #f9d9e2 42%, #f4c1d1 100%)
-      fixed,
-    var(--tb-bg);
+  background: var(--tb-bg);
+  font-family: var(--font-hanken), var(--font-geist-sans), "PingFang TC",
+    "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ── 共用元件樣式 ── */
+::selection {
+  background: var(--tb-amber);
+  color: var(--tb-ink);
+}
+
+/* ── 共用元件（平塗、方正、髮絲線，無陰影漸層）── */
 .tb-card {
-  border-radius: 1.25rem;
   border: 1px solid var(--tb-line);
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 16px 44px -20px rgba(236, 95, 146, 0.45);
+  border-radius: 6px;
+  background: var(--tb-card);
 }
 
 .tb-btn {
@@ -67,41 +87,53 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  border-radius: 9999px;
-  padding: 0.7rem 2rem;
+  border-radius: 3px;
+  padding: 0.7rem 1.6rem;
   font-weight: 600;
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  letter-spacing: 0.01em;
+  transition: background-color 0.16s ease, color 0.16s ease,
+    transform 0.16s ease;
 }
 .tb-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 .tb-btn-primary {
-  background: var(--tb-rose);
-  color: #fff;
-  box-shadow: 0 10px 24px -10px rgba(236, 95, 146, 0.7);
+  background: var(--tb-ink);
+  color: var(--tb-bg);
 }
 .tb-btn-primary:not(:disabled):hover {
-  transform: scale(1.05);
-}
-.tb-btn-primary:not(:disabled):active {
-  transform: scale(0.96);
+  transform: translateY(-2px);
 }
 .tb-btn-ghost {
-  border: 1px solid #e9a9c1;
-  color: var(--tb-rose-deep);
+  border: 1px solid var(--tb-ink);
+  color: var(--tb-ink);
 }
 .tb-btn-ghost:not(:disabled):hover {
-  background: var(--tb-bg);
+  background: var(--tb-ink);
+  color: var(--tb-bg);
 }
 
 .tb-input {
-  border-radius: 0.6rem;
-  border: 1px solid #eebdce;
-  background: #fff;
+  border-radius: 3px;
+  border: 1px solid var(--tb-line);
+  background: var(--tb-card);
   padding: 0.6rem 0.85rem;
+  color: var(--tb-ink);
   outline: none;
 }
+.tb-input::placeholder {
+  color: var(--tb-ink-soft);
+}
 .tb-input:focus {
-  border-color: var(--tb-rose);
+  border-color: var(--tb-ink);
+}
+
+/* 小標籤：字距拉開的英文/標號 */
+.tb-eyebrow {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-weight: 600;
+  font-size: 0.7rem;
 }

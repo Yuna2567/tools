@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { Geist_Mono, Hanken_Grotesk } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -12,23 +13,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
 export const metadata: Metadata = {
-  title: "工具箱 — 抽獎轉盤・蕃茄鐘・好運抽籤",
+  title: "工具箱 — 抽獎轉盤・蕃茄鐘・好運抽籤・世界時間",
   description:
-    "三個好用的小工具：抽獎大轉盤、番茄鐘、每日好運抽籤。打開即用，資料只留在你的瀏覽器。",
+    "四個好用的小工具：抽獎大轉盤、番茄鐘、每日好運抽籤、中原標準時間對照。打開即用，資料只留在你的瀏覽器。",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="zh-Hant"
-      className={`${geistSans.variable} ${geistMono.variable} ${spaceGrotesk.variable} h-full antialiased`}
+      className={`${hanken.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>

@@ -70,7 +70,7 @@ export default function LotteryPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-8 px-6 py-12">
-      <PageHeader emoji="🎡" title="抽獎轉盤">
+      <PageHeader eyebrow="Spin to Win" title="抽獎轉盤">
         左側輸入名單（每行一項，或用逗號分隔），點轉盤中央的「GO」開始抽獎。
       </PageHeader>
 
@@ -140,13 +140,13 @@ export default function LotteryPage() {
             {spinning ? "抽獎中…" : "開始抽獎"}
           </button>
           {n < 2 && (
-            <p className="text-sm text-tb-rose-deep">至少需要 2 項才能抽獎。</p>
+            <p className="text-sm text-tb-clay">至少需要 2 項才能抽獎。</p>
           )}
 
           <div className="h-16 text-center">
             {winner && (
-              <p className="text-2xl font-bold text-tb-rose-deep">
-                🎉 中獎：<span className="text-tb-purple">{winner}</span>
+              <p className="font-display text-2xl font-extrabold text-tb-ink">
+                中獎 · <span className="text-tb-clay">{winner}</span>
               </p>
             )}
           </div>

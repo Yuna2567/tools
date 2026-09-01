@@ -6,9 +6,9 @@ import PageHeader from "@/components/PageHeader";
 type Mode = "focus" | "short" | "long";
 
 const MODES: Record<Mode, { label: string; minutes: number; color: string; ring: string }> = {
-  focus: { label: "專注", minutes: 25, color: "text-[#b83d6d]", ring: "#ec5f92" },
-  short: { label: "短休息", minutes: 5, color: "text-[#2f8f79]", ring: "#4bb79c" },
-  long: { label: "長休息", minutes: 15, color: "text-[#6c56b0]", ring: "#9c86d8" },
+  focus: { label: "專注", minutes: 25, color: "text-tb-clay", ring: "#bb4e2b" },
+  short: { label: "短休息", minutes: 5, color: "text-tb-sage", ring: "#5c7150" },
+  long: { label: "長休息", minutes: 15, color: "text-tb-indigo", ring: "#34417a" },
 };
 
 const SETTINGS_KEY = "pomodoro.settings";
@@ -269,7 +269,7 @@ export default function PomodoroPage() {
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-3xl flex-col gap-10 px-6 py-12">
-      <PageHeader emoji="🍅" title="蕃茄鐘">
+      <PageHeader eyebrow="Focus Timer" title="蕃茄鐘">
         25 分鐘專注、5 分鐘休息，每 4 輪專注後有一次長休息，幫助你保持節奏。
       </PageHeader>
 

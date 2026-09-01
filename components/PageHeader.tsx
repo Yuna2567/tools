@@ -2,28 +2,30 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 export default function PageHeader({
-  emoji,
+  eyebrow,
   title,
   children,
 }: {
-  emoji: string;
+  eyebrow: string;
   title: string;
   children?: ReactNode;
 }) {
   return (
-    <header className="flex w-full flex-col gap-2">
+    <header className="flex w-full flex-col gap-3 border-b border-tb-line pb-7">
       <Link
         href="/"
-        className="text-sm font-medium text-tb-rose-deep/60 transition-colors hover:text-tb-rose-deep"
+        className="text-[13px] font-medium text-tb-ink-soft transition-colors hover:text-tb-ink"
       >
         ← 回工具箱
       </Link>
-      <h1 className="flex items-center gap-2 text-3xl font-black tracking-tight text-tb-rose-deep">
-        <span>{emoji}</span>
-        {title}
-      </h1>
+      <div className="flex flex-col gap-1.5">
+        <span className="tb-eyebrow text-tb-ink-soft">{eyebrow}</span>
+        <h1 className="font-display text-3xl font-extrabold tracking-tight text-tb-ink sm:text-4xl">
+          {title}
+        </h1>
+      </div>
       {children && (
-        <p className="text-sm leading-6 text-tb-ink/70">{children}</p>
+        <p className="max-w-2xl text-sm leading-7 text-tb-ink-soft">{children}</p>
       )}
     </header>
   );

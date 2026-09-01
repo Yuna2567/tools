@@ -90,12 +90,12 @@ const FORTUNES: Fortune[] = [
 ];
 
 const DIAMOND_FILL: Record<Tone, string> = {
-  super: "#f0a29b",
-  great: "#f2a9be",
-  good: "#f7c9d5",
-  mid: "#f4d59f",
-  bad: "#cfd5db",
-  worst: "#b9bfc7",
+  super: "#bb4e2b",
+  great: "#d98b3f",
+  good: "#dfa22a",
+  mid: "#e8d19a",
+  bad: "#c8c3b2",
+  worst: "#a9a596",
 };
 
 const ASPECTS = {
@@ -221,8 +221,8 @@ export default function OmikujiPage() {
     : null;
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center gap-8 px-6 py-12">
-      <PageHeader emoji="🎋" title="好運抽籤">
+    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center gap-9 px-5 py-12 sm:px-8">
+      <PageHeader eyebrow="Daily Fortune" title="好運抽籤">
         誠心默念想問的事，搖動籤筒抽出今日運勢（超大吉～大凶）。每天一支，隔日可再抽。
       </PageHeader>
 
@@ -282,10 +282,10 @@ export default function OmikujiPage() {
           border-radius: 2px 2px 1px 1px;
           transform-origin: bottom center;
           background:
-            repeating-linear-gradient(0deg, transparent 0 21px, rgba(74,48,8,0.28) 21px 22px),
-            linear-gradient(90deg, #c68f2c 0%, #f1d585 44%, #e3ad42 72%, #ac7d1e 100%);
-          border: 1px solid #9c7220;
-          box-shadow: 0 3px 5px rgba(0,0,0,0.18);
+            repeating-linear-gradient(0deg, transparent 0 21px, rgba(74,48,8,0.32) 21px 22px),
+            #dfa22a;
+          border: 1px solid #23201a;
+          border-right-width: 2px;
         }
         .tube-stick[data-a="-25"] { transform: rotate(-25deg); }
         .tube-stick[data-a="-9"] { transform: rotate(-9deg); }
@@ -293,50 +293,48 @@ export default function OmikujiPage() {
         .tube-stick[data-a="23"] { transform: rotate(23deg); }
         .tube-knot {
           position: absolute; top: 12px; left: 50%; width: 11px; height: 11px;
-          margin-left: -5.5px; border-radius: 9999px; background: #d94a4a;
-          box-shadow: 0 7px 0 -3px #d94a4a;
+          margin-left: -5.5px; border-radius: 9999px; background: #bb4e2b;
+          box-shadow: 0 7px 0 -3px #bb4e2b;
         }
 
         .tube-box { position: absolute; left: 44px; bottom: 0; width: 122px; height: 150px; }
         .tube-box-depth {
           position: absolute; left: 9px; top: -9px; width: 100%; height: 100%;
-          background: #e8e3d6; border: 1.5px solid #2c2c2c;
+          background: #e4ddca; border: 1.5px solid #23201a;
         }
         .tube-box-face {
           position: absolute; inset: 0; overflow: hidden;
-          background: linear-gradient(118deg, #ffffff 0%, #ffffff 58%, #efeade 100%);
-          border: 1.5px solid #2c2c2c;
+          background: #fbfaf4;
+          border: 1.5px solid #23201a;
         }
         .tube-box-mouth {
           position: absolute; left: 15px; right: 15px; top: 11px; height: 12px;
-          background: #cec7b5; border: 1.5px solid #2c2c2c;
+          background: #d9d2bf; border: 1.5px solid #23201a;
         }
         .tube-box-word {
           position: absolute; left: 0; right: 0; top: 34px; margin: 0 auto;
           writing-mode: vertical-rl; text-orientation: upright;
           font-size: 30px; font-weight: 800; letter-spacing: 4px;
-          color: #2c2c2c; text-align: center;
+          color: #23201a; text-align: center;
         }
         .tube-label {
           position: absolute; top: 34px; right: -8px;
-          background: #1f1f1f; color: #fff;
+          background: #23201a; color: #f3efe4;
           font-weight: 800; font-size: 14px; letter-spacing: 2px;
-          padding: 6px 14px; border-radius: 9999px; white-space: nowrap;
-          box-shadow: 0 8px 16px -6px rgba(0,0,0,0.4);
+          padding: 6px 14px; border-radius: 3px; white-space: nowrap;
         }
 
         .omikuji-frame {
-          padding: 18px;
-          border-radius: 10px;
-          background-color: #f2a49c;
+          padding: 16px;
+          border-radius: 4px;
+          background-color: #bb4e2b;
           background-image:
-            repeating-linear-gradient(45deg, rgba(255,255,255,0.28) 0 2px, transparent 2px 15px),
-            repeating-linear-gradient(-45deg, rgba(255,255,255,0.28) 0 2px, transparent 2px 15px);
-          box-shadow: 0 22px 50px -22px rgba(198,56,92,0.55);
-          animation: omikuji-reveal 0.5s ease both;
+            repeating-linear-gradient(45deg, rgba(243,239,228,0.32) 0 2px, transparent 2px 15px),
+            repeating-linear-gradient(-45deg, rgba(243,239,228,0.32) 0 2px, transparent 2px 15px);
+          animation: omikuji-reveal 0.4s ease both;
         }
         .omikuji-paper {
-          background: #fff;
+          background: #fbfaf4;
           border: 1.5px solid #2c2c2c;
           padding: 26px 22px 16px;
           color: #2c2c2c;
@@ -383,7 +381,7 @@ export default function OmikujiPage() {
 
             {/* 直書內文 + 幸運色 */}
             <div className="my-6 flex justify-center">
-              <div className="omikuji-vertical h-72 text-[15px] leading-8">
+              <div className="omikuji-vertical h-[19rem] text-[15px] leading-8">
                 <p className="tracking-[0.12em]">{fortune.summary}</p>
                 <p className="ml-5 tracking-[0.2em] text-[#2c2c2c]/80">
                   「{fortune.verse}」
@@ -405,10 +403,10 @@ export default function OmikujiPage() {
       {result && fortune && !drawing && (
         <div className="flex w-full max-w-[340px] flex-col items-center gap-4">
           <div className="flex flex-wrap justify-center gap-2 text-sm">
-            <span className="rounded-full bg-white/80 px-3 py-1 font-medium text-tb-rose-deep ring-1 ring-tb-line">
+            <span className="rounded-sm border border-tb-line bg-tb-card px-3 py-1 font-medium text-tb-ink">
               幸運數字 {result.luckyNumber}
             </span>
-            <span className="rounded-full bg-white/80 px-3 py-1 font-medium text-tb-rose-deep ring-1 ring-tb-line">
+            <span className="rounded-sm border border-tb-line bg-tb-card px-3 py-1 font-medium text-tb-ink">
               吉利方位 {result.luckyDirection}
             </span>
           </div>
