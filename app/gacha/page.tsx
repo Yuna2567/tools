@@ -14,18 +14,49 @@ function parseItems(raw: string): string[] {
     .filter(Boolean);
 }
 
-// 蛋殼裡預先擺好的膠囊位置（固定，避免 hydration 不一致）
-const CAPSULES = [
-  [88, 70],
-  [118, 66],
-  [70, 96],
-  [104, 100],
-  [136, 96],
-  [86, 128],
-  [120, 130],
-  [150, 118],
-  [64, 60],
+// 玻璃罩內的扭蛋（固定座標，避免 hydration 不一致）
+const BALLS: [number, number, number][] = [
+  [120, 170, 18],
+  [86, 160, 15],
+  [154, 158, 16],
+  [64, 140, 13],
+  [176, 138, 13],
+  [104, 138, 15],
+  [138, 142, 14],
+  [120, 112, 13],
+  [88, 114, 12],
+  [152, 112, 12],
+  [110, 84, 11],
+  [148, 80, 10],
+  [80, 86, 10],
+  [120, 56, 9],
+  [170, 104, 10],
+  [70, 110, 10],
 ];
+
+// 掉出機台、散在地上的扭蛋
+const GROUND_BALLS: [number, number, number][] = [
+  [70, 330, 11],
+  [166, 334, 9],
+  [118, 320, 8],
+];
+
+function Ball({ cx, cy, r }: { cx: number; cy: number; r: number }) {
+  return (
+    <g>
+      <circle cx={cx} cy={cy} r={r} fill="#fff" stroke="#14130f" strokeWidth={1.7} />
+      <circle cx={cx - r * 0.33} cy={cy - r * 0.1} r={1.4} fill="#14130f" />
+      <circle cx={cx + r * 0.33} cy={cy - r * 0.1} r={1.4} fill="#14130f" />
+      <path
+        d={`M${cx - r * 0.3} ${cy + r * 0.18} Q${cx} ${cy + r * 0.46} ${cx + r * 0.3} ${cy + r * 0.18}`}
+        fill="none"
+        stroke="#14130f"
+        strokeWidth={1.4}
+        strokeLinecap="round"
+      />
+    </g>
+  );
+}
 
 type Phase = "idle" | "rolling" | "done";
 
@@ -118,61 +149,70 @@ export default function GachaPage() {
 
         {/* 扭蛋機 */}
         <section className="flex flex-col items-center gap-6">
-          <div className="tb-card w-full max-w-[360px] p-6">
-            <div className="mb-2 flex items-center justify-between">
+          <div className="tb-card w-full max-w-[380px] p-6">
+            <div className="mb-1 flex items-center justify-between">
               <span className="tb-eyebrow text-tb-ink-soft">Gachapon</span>
               <span className="text-xs text-tb-ink-soft">{items.length} 顆</span>
             </div>
 
             <svg
-              viewBox="0 0 220 300"
+              viewBox="0 0 240 348"
               className={`block w-full ${phase === "rolling" ? "gacha-shake" : ""}`}
             >
-              {/* 圓頂玻璃罩 */}
-              <circle cx="110" cy="96" r="66" fill="#fff" stroke="#14130f" strokeWidth="1.8" />
-              {CAPSULES.map(([x, y], i) => (
-                <circle
-                  key={i}
-                  cx={x}
-                  cy={y}
-                  r={i % 3 === 0 ? 10 : 8}
-                  fill={i % 2 ? "#f2f0ea" : "#fff"}
-                  stroke="#14130f"
-                  strokeWidth="1.4"
-                />
+              {/* 玻璃罩 */}
+              <circle cx="120" cy="100" r="88" fill="#cfe6ec" stroke="#14130f" strokeWidth="2.6" />
+              {/* 反光 */}
+              <path d="M62 58 Q78 40 106 38" fill="none" stroke="#fff" strokeWidth="6.5" strokeLinecap="round" />
+              <path d="M56 80 Q60 68 74 61" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
+              {/* 扭蛋堆 */}
+              {BALLS.map(([x, y, r], i) => (
+                <Ball key={i} cx={x} cy={y} r={r} />
               ))}
 
-              {/* 頂蓋 */}
-              <path d="M96 33 a14 6 0 0 1 28 0" fill="#f2f0ea" stroke="#14130f" strokeWidth="1.6" />
+              {/* 地上散落的扭蛋（在機身之後蓋不到，先畫）*/}
+              {GROUND_BALLS.map(([x, y, r], i) => (
+                <Ball key={`g${i}`} cx={x} cy={y} r={r} />
+              ))}
 
               {/* 機身 */}
-              <path
-                d="M46 150 H174 V262 a6 6 0 0 1 -6 6 H52 a6 6 0 0 1 -6 -6 Z"
-                fill="#fff"
-                stroke="#14130f"
-                strokeWidth="1.8"
-              />
-              <path d="M46 150 H174" stroke="#14130f" strokeWidth="1.8" />
-              {/* 商品窗 */}
-              <rect x="66" y="168" width="66" height="40" fill="#f2f0ea" stroke="#14130f" strokeWidth="1.6" />
-              {/* 投幣孔 */}
-              <rect x="150" y="176" width="4" height="16" rx="2" fill="#14130f" />
+              <rect x="38" y="176" width="164" height="150" rx="14" fill="#c0512c" stroke="#14130f" strokeWidth="2.6" />
 
-              {/* 旋鈕 */}
+              {/* 商品窗 */}
+              <rect x="54" y="192" width="58" height="34" rx="4" fill="#f4efe2" stroke="#14130f" strokeWidth="2" />
+              <circle cx="83" cy="209" r="9" fill="#fff" stroke="#14130f" strokeWidth="1.6" />
+              {/* 投幣孔 */}
+              <rect x="150" y="196" width="18" height="5" rx="2.5" fill="#14130f" />
+
+              {/* PULL 拉桿口 */}
+              <rect x="176" y="206" width="10" height="46" rx="5" fill="#14130f" />
+              <text x="181" y="266" textAnchor="middle" fontSize="9" fontWeight="800" fill="#f4efe2">
+                PULL
+              </text>
+
+              {/* 黃色轉鈕（扭的時候會轉）*/}
               <g
                 style={{
                   transform: `rotate(${knob}deg)`,
-                  transformOrigin: "110px 232px",
+                  transformOrigin: "104px 262px",
                   transition: "transform 0.85s cubic-bezier(.3,1.4,.4,1)",
                 }}
               >
-                <circle cx="110" cy="232" r="17" fill="#fff" stroke="#14130f" strokeWidth="1.8" />
-                <rect x="107" y="216" width="6" height="32" rx="3" fill="#14130f" />
+                <circle cx="104" cy="262" r="30" fill="#dca42b" stroke="#14130f" strokeWidth="2.6" />
+                <rect x="99" y="234" width="10" height="56" rx="5" fill="#14130f" />
+                <path d="M126 250 a24 24 0 0 1 3 12" fill="none" stroke="#14130f" strokeWidth="2.4" strokeLinecap="round" />
+                <path d="M129 262 l-3.5 -3 l4.5 -1 z" fill="#14130f" />
               </g>
 
+              {/* 按鈕燈 */}
+              <circle cx="150" cy="298" r="6" fill="#5c7150" stroke="#14130f" strokeWidth="2" />
+              <circle cx="170" cy="298" r="6" fill="#5c7150" stroke="#14130f" strokeWidth="2" />
+
               {/* 出蛋口 */}
-              <rect x="88" y="258" width="44" height="22" rx="3" fill="#f2f0ea" stroke="#14130f" strokeWidth="1.6" />
-              <path d="M88 269 h44" stroke="#14130f" strokeWidth="1.2" strokeDasharray="3 3" />
+              <rect x="96" y="300" width="48" height="22" rx="4" fill="#f4efe2" stroke="#14130f" strokeWidth="2" />
+              <path d="M96 311 h48" stroke="#14130f" strokeWidth="1.3" strokeDasharray="3 3" />
+              <circle cx="112" cy="314" r="9" fill="#fff" stroke="#14130f" strokeWidth="1.7" />
+              <circle cx="109" cy="313" r="1.3" fill="#14130f" />
+              <circle cx="115" cy="313" r="1.3" fill="#14130f" />
             </svg>
           </div>
 
