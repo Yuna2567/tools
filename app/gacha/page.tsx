@@ -34,11 +34,10 @@ const BALLS: [number, number, number][] = [
   [70, 110, 10],
 ];
 
-// 掉出機台、散在地上的扭蛋
+// 散在地上的扭蛋（避開左下方掉蛋落點）
 const GROUND_BALLS: [number, number, number][] = [
-  [70, 330, 11],
-  [166, 334, 9],
-  [118, 320, 8],
+  [150, 340, 10],
+  [178, 346, 7],
 ];
 
 function Ball({ cx, cy, r }: { cx: number; cy: number; r: number }) {
@@ -86,13 +85,13 @@ export default function GachaPage() {
     const pick = items[Math.floor(Math.random() * items.length)];
     setResult(null);
     setPhase("rolling");
-    setKnob((k) => k + 220);
+    setKnob((k) => k + 540);
     timers.current.push(
       setTimeout(() => {
         setResult(pick);
         setPhase("done");
         setHistory((h) => [pick, ...h].slice(0, 12));
-      }, 850),
+      }, 1300),
     );
   }
 
@@ -156,23 +155,32 @@ export default function GachaPage() {
             </div>
 
             <svg
-              viewBox="0 0 240 348"
-              className={`block w-full ${phase === "rolling" ? "gacha-shake" : ""}`}
+              viewBox="0 0 240 356"
+              className={`gacha-machine block w-full ${phase === "rolling" ? "is-rolling" : ""}`}
             >
               {/* 玻璃罩 */}
               <circle cx="120" cy="100" r="88" fill="#cfe6ec" stroke="#14130f" strokeWidth="2.6" />
               {/* 反光 */}
               <path d="M62 58 Q78 40 106 38" fill="none" stroke="#fff" strokeWidth="6.5" strokeLinecap="round" />
               <path d="M56 80 Q60 68 74 61" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
-              {/* 扭蛋堆 */}
-              {BALLS.map(([x, y, r], i) => (
-                <Ball key={i} cx={x} cy={y} r={r} />
-              ))}
+              {/* 扭蛋堆（轉的時候會晃）*/}
+              <g className="gacha-balls">
+                {BALLS.map(([x, y, r], i) => (
+                  <Ball key={i} cx={x} cy={y} r={r} />
+                ))}
+              </g>
 
-              {/* 地上散落的扭蛋（在機身之後蓋不到，先畫）*/}
+              {/* 地上散落的扭蛋 */}
               {GROUND_BALLS.map(([x, y, r], i) => (
                 <Ball key={`g${i}`} cx={x} cy={y} r={r} />
               ))}
+
+              {/* 掉出來的那顆 */}
+              {phase !== "idle" && (
+                <g className="gacha-drop">
+                  <Ball cx={78} cy={344} r={11} />
+                </g>
+              )}
 
               {/* 機身 */}
               <rect x="38" y="176" width="164" height="150" rx="14" fill="#c0512c" stroke="#14130f" strokeWidth="2.6" />
@@ -189,12 +197,12 @@ export default function GachaPage() {
                 PULL
               </text>
 
-              {/* 黃色轉鈕（扭的時候會轉）*/}
+              {/* 黃色轉鈕 */}
               <g
                 style={{
                   transform: `rotate(${knob}deg)`,
                   transformOrigin: "104px 262px",
-                  transition: "transform 0.85s cubic-bezier(.3,1.4,.4,1)",
+                  transition: "transform 1.2s cubic-bezier(.28,.9,.3,1)",
                 }}
               >
                 <circle cx="104" cy="262" r="30" fill="#dca42b" stroke="#14130f" strokeWidth="2.6" />
@@ -207,12 +215,11 @@ export default function GachaPage() {
               <circle cx="150" cy="298" r="6" fill="#5c7150" stroke="#14130f" strokeWidth="2" />
               <circle cx="170" cy="298" r="6" fill="#5c7150" stroke="#14130f" strokeWidth="2" />
 
-              {/* 出蛋口 */}
-              <rect x="96" y="300" width="48" height="22" rx="4" fill="#f4efe2" stroke="#14130f" strokeWidth="2" />
+              {/* 出蛋口（門會彈開）*/}
               <path d="M96 311 h48" stroke="#14130f" strokeWidth="1.3" strokeDasharray="3 3" />
-              <circle cx="112" cy="314" r="9" fill="#fff" stroke="#14130f" strokeWidth="1.7" />
-              <circle cx="109" cy="313" r="1.3" fill="#14130f" />
-              <circle cx="115" cy="313" r="1.3" fill="#14130f" />
+              <g className="gacha-flap">
+                <rect x="96" y="300" width="48" height="22" rx="4" fill="#f4efe2" stroke="#14130f" strokeWidth="2" />
+              </g>
             </svg>
           </div>
 
@@ -251,23 +258,70 @@ export default function GachaPage() {
       </div>
 
       <style>{`
-        @keyframes gacha-shake {
-          0%, 100% { transform: translateX(0) rotate(0); }
-          20% { transform: translateX(-3px) rotate(-1.4deg); }
-          50% { transform: translateX(3px) rotate(1.4deg); }
-          80% { transform: translateX(-2px) rotate(-0.8deg); }
+        @keyframes gacha-wobble {
+          0%   { transform: rotate(0) translateY(0) scale(1); }
+          8%   { transform: rotate(-3deg) scale(1.015); }
+          20%  { transform: rotate(4.5deg) translateY(-3px) scaleY(0.96); }
+          32%  { transform: rotate(-3.5deg) translateY(0) scaleY(1.03); }
+          46%  { transform: rotate(3deg) translateY(-2px); }
+          60%  { transform: rotate(-2deg) translateY(0); }
+          74%  { transform: rotate(1.3deg); }
+          88%  { transform: rotate(-0.6deg); }
+          100% { transform: rotate(0) translateY(0) scale(1); }
         }
-        .gacha-shake { animation: gacha-shake 0.28s ease-in-out infinite; }
+        .gacha-machine {
+          transform-origin: 50% 92%;
+          transition: transform 0.2s ease;
+        }
+        .gacha-machine.is-rolling {
+          animation: gacha-wobble 1.3s cubic-bezier(.32,.5,.35,1);
+        }
+
+        @keyframes gacha-balls-jiggle {
+          0%, 100% { transform: translate(0, 0); }
+          30% { transform: translate(-2px, -2px) rotate(-1deg); }
+          65% { transform: translate(2px, -1px) rotate(1deg); }
+        }
+        .gacha-balls { transform-origin: 120px 120px; }
+        .gacha-machine.is-rolling .gacha-balls {
+          animation: gacha-balls-jiggle 0.13s ease-in-out 9;
+        }
+
+        @keyframes gacha-flap-open {
+          0%, 100% { transform: rotate(0); }
+          35% { transform: rotate(-30deg); }
+          70% { transform: rotate(-6deg); }
+        }
+        .gacha-flap { transform-origin: 96px 300px; }
+        .gacha-machine.is-rolling .gacha-flap {
+          animation: gacha-flap-open 0.6s ease 0.55s;
+        }
+
+        @keyframes gacha-drop {
+          0% { transform: translate(28px, -60px) scale(0.7); opacity: 0; }
+          45% { opacity: 0; }
+          58% { transform: translate(14px, -60px) scale(0.9); opacity: 1; }
+          80% { transform: translate(0, 8px) scale(1); }
+          92% { transform: translate(0, -4px); }
+          100% { transform: translate(0, 0); }
+        }
+        .gacha-drop { opacity: 0; }
+        .gacha-machine.is-rolling .gacha-drop {
+          animation: gacha-drop 0.85s cubic-bezier(.3,1.3,.5,1) 0.5s forwards;
+        }
+        .gacha-machine:not(.is-rolling) .gacha-drop { opacity: 1; }
 
         @keyframes gacha-pop {
-          from { opacity: 0; transform: translateY(-24px) scale(0.9); }
-          to { opacity: 1; transform: none; }
+          0% { opacity: 0; transform: translateY(-28px) scale(0.3) rotate(-14deg); }
+          55% { opacity: 1; transform: translateY(0) scale(1.14) rotate(5deg); }
+          75% { transform: scale(0.95) rotate(-2deg); }
+          100% { transform: scale(1) rotate(0); }
         }
         .gacha-egg {
           position: relative;
           width: 120px;
           height: 120px;
-          animation: gacha-pop 0.35s ease both;
+          animation: gacha-pop 0.5s cubic-bezier(.3,1.2,.5,1) both;
         }
         .egg-half {
           position: absolute;

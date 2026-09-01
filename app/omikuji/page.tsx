@@ -235,72 +235,43 @@ export default function OmikujiPage() {
           aria-label="抽籤"
           className="omikuji-shaker"
         >
-          <svg viewBox="0 0 180 250" className="block h-60 w-auto">
-            {/* 竹籤（先畫，下段會被筒身與筒口蓋住）*/}
-            {[
-              { deg: -19, len: 96, dot: false },
-              { deg: -4, len: 108, dot: false },
-              { deg: 16, len: 82, dot: true },
-            ].map((s, i) => {
-              const top = 104 - s.len;
-              return (
-                <g key={i} transform={`rotate(${s.deg} 90 104)`}>
-                  <rect
-                    x={84}
-                    y={top}
-                    width={12}
-                    height={s.len}
-                    rx={2}
-                    fill="#fff"
-                    stroke="#14130f"
-                    strokeWidth={1.6}
-                  />
-                  <line x1={84} y1={top + 13} x2={96} y2={top + 13} stroke="#14130f" strokeWidth={1.4} />
-                  <line x1={84} y1={top + 21} x2={96} y2={top + 21} stroke="#14130f" strokeWidth={1.4} />
-                  {s.dot && <circle cx={90} cy={top + 6} r={3.6} fill="#c0512c" />}
-                </g>
-              );
-            })}
+          <svg viewBox="0 0 190 250" className="block h-60 w-auto">
+            {/* 筒口後緣（在籤後面）*/}
+            <path d="M61 92 A34 11 0 0 0 129 92" fill="none" stroke="#14130f" strokeWidth={1.6} />
 
-            {/* 筒身 */}
+            {/* 籤（插在筒裡：下段被筒身蓋住）*/}
+            <g className="omikuji-sticks">
+              {[
+                { deg: -20, len: 118, dot: false },
+                { deg: -3, len: 130, dot: false },
+                { deg: 15, len: 108, dot: true },
+              ].map((s, i) => {
+                const top = 150 - s.len;
+                return (
+                  <g key={i} transform={`rotate(${s.deg} 95 150)`}>
+                    <rect x={89.5} y={top} width={11} height={s.len} rx={2} fill="#fff" stroke="#14130f" strokeWidth={1.6} />
+                    <line x1={89.5} y1={top + 12} x2={100.5} y2={top + 12} stroke="#14130f" strokeWidth={1.3} />
+                    <line x1={89.5} y1={top + 20} x2={100.5} y2={top + 20} stroke="#14130f" strokeWidth={1.3} />
+                    {s.dot && <circle cx={95} cy={top + 6} r={3.4} fill="#c0512c" />}
+                  </g>
+                );
+              })}
+            </g>
+
+            {/* 筒身（含前緣，蓋住籤的下段）*/}
             <path
-              d="M56 96 L56 206 Q56 222 72 222 L108 222 Q124 222 124 206 L124 96"
+              d="M61 92 A34 11 0 0 1 129 92 L129 206 Q129 224 111 224 L79 224 Q61 224 61 206 Z"
               fill="#fff"
               stroke="#14130f"
               strokeWidth={1.8}
               strokeLinejoin="round"
             />
-            {/* 筒口 */}
-            <ellipse
-              cx={90}
-              cy={96}
-              rx={34}
-              ry={11}
-              fill="#f2f0ea"
-              stroke="#14130f"
-              strokeWidth={1.8}
-            />
-            {/* 直書：兩字各自置中，避免 writing-mode 造成偏移 */}
-            <text
-              x={90}
-              y={144}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={28}
-              fontWeight={800}
-              fill="#14130f"
-            >
+
+            {/* 直書：兩字各自置中 */}
+            <text x={95} y={150} textAnchor="middle" dominantBaseline="central" fontSize={27} fontWeight={800} fill="#14130f">
               御
             </text>
-            <text
-              x={90}
-              y={180}
-              textAnchor="middle"
-              dominantBaseline="central"
-              fontSize={28}
-              fontWeight={800}
-              fill="#14130f"
-            >
+            <text x={95} y={186} textAnchor="middle" dominantBaseline="central" fontSize={27} fontWeight={800} fill="#14130f">
               籤
             </text>
           </svg>
@@ -313,9 +284,18 @@ export default function OmikujiPage() {
       </div>
 
       <style>{`
-        @keyframes omikuji-shake {
-          0%, 100% { transform: rotate(-4deg); }
-          50% { transform: rotate(4deg); }
+        @keyframes omikuji-wobble {
+          0%   { transform: rotate(0) translateY(0); }
+          12%  { transform: rotate(-7deg) translateY(1px); }
+          28%  { transform: rotate(6deg) translateY(-4px); }
+          44%  { transform: rotate(-5deg) translateY(0); }
+          60%  { transform: rotate(4deg) translateY(-3px); }
+          76%  { transform: rotate(-2.5deg) translateY(0); }
+          100% { transform: rotate(0) translateY(0); }
+        }
+        @keyframes omikuji-rattle {
+          0%, 100% { transform: rotate(-2deg); }
+          50% { transform: rotate(2.5deg); }
         }
         @keyframes omikuji-reveal {
           from { opacity: 0; transform: translateY(12px); }
@@ -323,12 +303,16 @@ export default function OmikujiPage() {
         }
         .omikuji-shaker {
           transition: transform 0.15s ease;
-          transform-origin: 50% 82%;
+          transform-origin: 50% 86%;
         }
         .omikuji-shaker:not(:disabled):hover { transform: translateY(-4px); }
         .omikuji-shaker:disabled {
           cursor: wait;
-          animation: omikuji-shake 0.3s ease-in-out infinite;
+          animation: omikuji-wobble 0.6s ease-in-out infinite;
+        }
+        .omikuji-sticks { transform-origin: 95px 150px; }
+        .omikuji-shaker:disabled .omikuji-sticks {
+          animation: omikuji-rattle 0.16s ease-in-out infinite;
         }
 
         .omikuji-frame {
